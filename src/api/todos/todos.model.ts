@@ -1,10 +1,14 @@
 import * as z from 'zod';
 
+import { db } from '../../db';
+import { WithId } from 'mongodb';
+
 const Todo = z.object({
   content: z.string().min(1),
   done: z.boolean().default(false),
 });
 
-type Todo = z.infer<typeof Todo>;
+export type Todo = z.infer<typeof Todo>;
+export type TodoWithId = WithId<Todo>;
 
-export default Todo;
+export const Todos = db.collection<Todo>('todos');
