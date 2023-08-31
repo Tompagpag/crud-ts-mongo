@@ -123,3 +123,35 @@ describe('PUT /api/v1/todos/:id', () => {
         expect(response.body).toHaveProperty('done');
       }));
 });
+
+describe('DELETE /api/v1/todos/:id', () => {
+  it('responds with a invalid ObjectID error', (done) => {
+    request(app)
+      .delete('/api/v1/todos/adadadazzadazds')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(422, done);
+  });
+
+  it('responds with a not found error', (done) => {
+    request(app)
+      .delete('/api/v1/todos/64ee2f5aad12bc724e4986bd')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(404, done);
+  });
+
+  it('responds with a 204 status code', (done) => {
+    request(app)
+      .delete(`/api/v1/todos/${id}`)
+      .expect(204, done);
+  });
+
+  it('responds with a not found error', (done) => {
+    request(app)
+      .get(`/api/v1/todos/${id}`)
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(404, done);
+  });
+});

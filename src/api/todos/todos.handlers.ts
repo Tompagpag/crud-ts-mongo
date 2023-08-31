@@ -9,8 +9,7 @@ export async function findAll(
   next: NextFunction,
 ) {
   try {
-    const result = await Todos.find();
-    const todos = await result.toArray();
+    const todos = await Todos.find().toArray();
     res.json(todos);
   } catch (error) {
     next(error);
@@ -65,6 +64,23 @@ export async function updateOne(
       throw new Error(`Todo with ID :"${req.params.id}" not found.`);
     }
     res.json(result.value);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteOne(
+  req: Request<ParamsWithId, {}, {}>,
+  res: Response<{}>,
+  next: NextFunction,
+) {
+  try {
+    const result = await Todos.findOneAndDelete({ _id: new ObjectId(req.params.id) });
+    if (!result.value) {
+      res.status(404);
+      throw new Error(`Todo with ID :"${req.params.id}" not found.`);
+    }
+    res.status(204).end();
   } catch (error) {
     next(error);
   }
